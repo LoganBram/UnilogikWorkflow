@@ -31,7 +31,6 @@ function FileProcessor() {
   const handleFileChange = async (event) => {
     setFile(event.target.files[0]);
   };
-  //make new function for the rest of the code
 
   const handleInvoiceToChange = (event) => {
     const { name, value } = event.target;
@@ -60,6 +59,7 @@ function FileProcessor() {
       //get quote template
       const newWorksheet = workbook.getWorksheet("QuoteTemplate");
 
+      //counts how many rows to go down based on the C column in pricesheet
       let empty = false;
       let rowcount = 0;
       for (let i = 1; empty === false; i++) {
@@ -76,22 +76,28 @@ function FileProcessor() {
 
       let tempdata = [];
 
-      //first loop to access a row, starts at two to start at data rows not headers in excel sheet
+      //nested for loop, first loop to access row, second loop to access each cell within each row
+
+      //starts at two so it doesnt begin at the header row on the excel sheet
       for (let i = 2; i < rowcount + 2; i++) {
-        //if there has been something added to tempdata then push it to finaldata and reset tempdata
+        //tempdata holds a row of data, adds it to the final data then resets for the next row creating nested array
         if (tempdata[0] !== undefined) {
           //adds null value because of merged cell in quote template
+          //since a merged cell takes up two spots, we must add null for the second spot
           tempdata.splice(3, 0, null);
           finaldata.push(tempdata);
           tempdata = [];
         }
+
         const row = worksheet.getRow(i);
-        //add Item # for quote template first
+        //add Item # for quote template
         tempdata.push(i - 1);
 
-        //second loop to access each cell in the row
+        //nested loop to access each cell in the row
         for (let j = 1; j < 16; j++) {
           const cellValue = row.getCell(j).value;
+          //checks if the cell has a formula included and adds value accordingly
+          //different adding method needed with library if it has a formula
           if (
             typeof cellValue === "object" &&
             cellValue !== null &&
@@ -101,7 +107,7 @@ function FileProcessor() {
             tempdata.push(cellValue.result);
           } else {
             tempdata.push(cellValue);
-            //add to array
+            //add to array if no formula
           }
         }
       }
@@ -113,11 +119,10 @@ function FileProcessor() {
         innerArray.splice(11, 2);
       });
 
-      //j keeps track of row to input at
-      //i iterates through data array
-
-      //adding to excel sheet
+      //adding data to the excel sheet
       let j = 23;
+      //j keeps track of row to input at (always 23 due to the quote layout)
+      //i iterates through data array
       for (let i = 0; i < finaldata.length; i++) {
         newWorksheet.insertRow(j, finaldata[i], "i+");
         newWorksheet.mergeCells("C" + j, ":D" + j);
@@ -150,6 +155,7 @@ function FileProcessor() {
       //get todays date
       const date = new Date();
       //changes date to local time based on user
+      //adds current date to the quote
       newWorksheet.getCell("I2").value = date.toLocaleDateString("en-US");
 
       console.log("New workbook created successfully!");
