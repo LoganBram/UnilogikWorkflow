@@ -9,6 +9,13 @@ const SKU = require("./sku.js");
 const PORT = 3000;
 const matches = [];
 let SKUarr = [];
+let datadict = {
+  product: "hpro",
+  startdate: "st",
+  enddate: "en",
+  quantity: "q",
+  ourprice: "ourpr",
+};
 
 const refreshTokenStore = {};
 const accessTokenCache = new NodeCache({ deleteOnExpire: true });
@@ -171,13 +178,23 @@ const isAuthorized = (userId) => {
 
 //Using an Access Token to Query the HubSpot API
 
-//--------------------------- ACTS AS MAIN METHOD ----------------------------
 app.get("/oauthtrigg", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
   //accepts SKU values via url
+
   if (SKUarr.length === 0) {
-    const SKUaccept = await req.query.array;
+    const SKUaccept = await req.query.sku;
     SKUarr = SKUaccept.split(",");
+    const PRODaccept = await req.query.product;
+    datadict["product"] = PRODaccept.split(",");
+    const SDateaccept = await req.query.startdate;
+    datadict["startdate"] = SDateaccept.split(",");
+    const EDateaccept = await req.query.enddate;
+    datadict["enddate"] = EDateaccept.split(",");
+    const Quantityaccept = await req.query.quantity;
+    datadict["quantity"] = Quantityaccept.split(",");
+    const Ourpriceaccept = await req.query.ourprice;
+    datadict["ourprice"] = Ourpriceaccept.split(",");
   }
 
   res.write(`<h2>HubSpot OAuth 2.0 Quickstart App</h2>`);
@@ -194,6 +211,7 @@ app.get("/oauthtrigg", async (req, res) => {
       SKUarr,
       ProductPageSKUs
     );
+    res.write(`<p>data: ${datadict.product}  </p>`);
     //adds lineitems and associates them with the correct deal
     AddItems(accessToken, ItemArray_OfProductIds);
   } else {

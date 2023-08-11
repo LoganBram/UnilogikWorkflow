@@ -83,7 +83,6 @@ const AddItems = async (accessToken, ItemArray_OfProductIds) => {
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
   };
-  console.log(ItemArray_OfProductIds);
   //Creates line item using productid
   console.log(ItemArray_OfProductIds, "here");
   //create a new deal
