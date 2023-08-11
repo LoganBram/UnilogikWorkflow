@@ -38,7 +38,7 @@ const getAllProductSKU = async (accessToken) => {
 //takes the productpage of SKU's and compares to SKU's passed to us from pricesheet
 //returns all object id's of the products via the SKU comparison
 //object ID's are used to create line items with the correct item
-const MatchSKUs_GetProductid = (res, SKU, ProductPageSKUs, SKU_data_dicti) => {
+const MatchSKUs_GetProductid = (res, SKU, ProductPageSKUs) => {
   if (ProductPageSKUs.status === "error") {
     res.write(
       `<p>Unable to retrieve contact! Error Message: ${ProductPageSKUs.message}</p>`

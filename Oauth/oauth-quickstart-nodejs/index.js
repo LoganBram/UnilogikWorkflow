@@ -205,8 +205,7 @@ app.get("/oauthtrigg", async (req, res) => {
     const ItemArray_OfProductIds = MatchSKUs_GetProductid(
       res,
       SKUarr,
-      ProductPageSKUs,
-      finalOutput
+      ProductPageSKUs
     );
 
     //adds lineitems and associates them with the correct deal
