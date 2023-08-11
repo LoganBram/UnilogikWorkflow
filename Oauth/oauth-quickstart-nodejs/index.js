@@ -16,6 +16,7 @@ let datadict = {
   quantity: "q",
   ourprice: "ourpr",
 };
+let finalOutput = {};
 
 const refreshTokenStore = {};
 const accessTokenCache = new NodeCache({ deleteOnExpire: true });
@@ -25,6 +26,7 @@ const {
   getAllProductSKU,
   MatchSKUs_GetProductid,
   AddItems,
+  CleanIncomingData,
 } = require("./modules/datahandling.js");
 
 //middleware
@@ -195,12 +197,27 @@ app.get("/oauthtrigg", async (req, res) => {
     datadict["quantity"] = Quantityaccept.split(",");
     const Ourpriceaccept = await req.query.ourprice;
     datadict["ourprice"] = Ourpriceaccept.split(",");
+    //organize the data into {sku: {product: aasdasd, start: asdasd}}
+
+    for (let i = 0; i < SKUarr.length; i++) {
+      const sku = SKUarr[i];
+      finalOutput[sku] = {
+        product: datadict.product[i],
+        startdate: datadict.startdate[i],
+        enddate: datadict.enddate[i],
+        quantity: datadict.quantity[i],
+        ourprice: datadict.ourprice[i],
+      };
+    }
+    console.log(finalOutput);
   }
 
   res.write(`<h2>HubSpot OAuth 2.0 Quickstart App</h2>`);
   if (isAuthorized(req.sessionID)) {
     console.log(SKUarr);
     const accessToken = await getAccessToken(req.sessionID);
+    //gets all SKU's from product page in hubspot to be later matched againt
+    //SKU's passed from frontend
     const ProductPageSKUs = await getAllProductSKU(accessToken);
     res.write(`<h4>Access token: ${accessToken}</h4>`);
 
@@ -211,7 +228,7 @@ app.get("/oauthtrigg", async (req, res) => {
       SKUarr,
       ProductPageSKUs
     );
-    res.write(`<p>data: ${datadict.product}  </p>`);
+    console.log(finalOutput);
     //adds lineitems and associates them with the correct deal
     AddItems(accessToken, ItemArray_OfProductIds);
   } else {

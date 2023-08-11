@@ -3,12 +3,19 @@ const request = require("request-promise-native");
 const NodeCache = require("node-cache");
 const matches = [];
 const SKU = require("../sku.js");
-
+let finalOutput = {};
+let datadict = {
+  product: null,
+  startdate: null,
+  enddate: null,
+  quantity: null,
+  ourprice: null,
+};
 const refreshTokenStore = {};
 const accessTokenCache = new NodeCache({ deleteOnExpire: true });
 
-const hello = () => {
-  console.log("hello");
+const CleanIncomingData = async (incomingdata) => {
+  console.log(incomingdata);
 };
 //gets all SKU values from product page on hubspot
 const getAllProductSKU = async (accessToken) => {
@@ -163,8 +170,8 @@ const AddItems = async (accessToken, ItemArray_OfProductIds) => {
 };
 
 module.exports = {
-  hello,
   getAllProductSKU,
   MatchSKUs_GetProductid,
   AddItems,
+  CleanIncomingData,
 };
