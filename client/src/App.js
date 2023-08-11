@@ -187,8 +187,9 @@ function FileProcessor() {
     //trying post request to pass data instead of in the url, not sure
     //if it will work
 
+    //creates datarray object
+
     setTimeout(() => {
-      //creates datarray object
       const dataArray = finaldata.map((subarray) => ({
         sku: subarray[1],
         product: subarray[2],
@@ -198,19 +199,20 @@ function FileProcessor() {
         ourprice: subarray[9],
       }));
 
-      // Join specific properties
-      const sku = dataArray.map((item) => item.sku).join(",");
-      const product = dataArray.map((item) => item.product).join(",");
-      const startdate = dataArray.map((item) => item.startdate).join(",");
-      const enddate = dataArray.map((item) => item.enddate).join(",");
-      const quantity = dataArray.map((item) => item.quantity).join(",");
-      const ourprice = dataArray.map((item) => item.ourprice).join(",");
-      // prep url for get request
-      const queryParams = `sku=${sku}&product=${product}&startdate=${startdate}&enddate=${enddate}&quantity=${quantity}&ourprice=${ourprice}`;
-      const redirectUrl = `http://localhost:3000/oauthtrigg/?${queryParams}`;
+      let dictionary = {};
+      //NEED THIS TO BE {line1:{sku: 123123,product: asdasdasd }, line2: {sku: 123123,product: asdasdasd}} before passing because order
+      //get messed up when getting data on other side
+      for (let i = 0; i < finaldata.length; i++) {
+        const key = `line${i + 1}`;
+        dictionary[key] = dataArray[i];
+      }
+      const dictionaryJson = JSON.stringify(dictionary);
+      const encodedDictionary = encodeURIComponent(dictionaryJson);
+
+      const redirectUrl = `http://localhost:3000/oauthtrigg/?data=${encodedDictionary}`;
       //redirect using data in url
       window.location.href = redirectUrl;
-    }, 8000);
+    }, 10000);
   };
 
   return (
