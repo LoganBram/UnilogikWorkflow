@@ -75,17 +75,21 @@ function FileProcessor() {
       //once you have the column count transfer the information to template excel sheet
 
       let tempdata = [];
+      let distcost = [];
 
       //nested for loop, first loop to access row, second loop to access each cell within each row
-
       //starts at two so it doesnt begin at the header row on the excel sheet
       for (let i = 2; i < rowcount + 2; i++) {
         //tempdata holds a row of data, adds it to the final data then resets for the next row creating nested array
         if (tempdata[0] !== undefined) {
           //adds null value because of merged cell in quote template
           //since a merged cell takes up two spots, we must add null for the second spot
+          distcost.push(tempdata[10]);
+          //ourcost push, spliced this value out previously but if i try to add it back to the
+          //final data it will mess up the quote insertion positions, so have to make it its own thing
           tempdata.splice(3, 0, null);
           finaldata.push(tempdata);
+
           tempdata = [];
         }
 
@@ -172,6 +176,8 @@ function FileProcessor() {
       downloadLink.download = "processed_file.xlsx";
       downloadLink.click();
       downloadLink.remove();
+      console.log(finaldata);
+      console.log(distcost);
     };
 
     reader.readAsArrayBuffer(file);
@@ -183,10 +189,17 @@ function FileProcessor() {
 
     setTimeout(() => {
       const skuarray = finaldata.map((subarray) => subarray[1]);
+      const productarray = finaldata.map((subarray) => subarray[2]);
+      const startdate = finaldata.map((subarray) => subarray[6]);
+      const enddate = finaldata.map((subarray) => subarray[7]);
+      const quantity = finaldata.map((subarray) => subarray[8]);
+      const ourprice = finaldata.map((subarray) => subarray[9]);
+
+      //distributer price already accounted for in
       const grs = skuarray.join(",");
       // Run the redirect function to begin OAuth functionality
       window.location.href = `http://localhost:3000/oauthtrigg/?array=${grs}`;
-    }, 5000);
+    }, 8000);
   };
 
   return (
