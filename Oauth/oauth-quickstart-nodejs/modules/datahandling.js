@@ -3,19 +3,12 @@ const request = require("request-promise-native");
 const NodeCache = require("node-cache");
 const matches = [];
 const SKU = require("../sku.js");
-let finalOutput = {};
-let datadict = {
-  product: null,
-  startdate: null,
-  enddate: null,
-  quantity: null,
-  ourprice: null,
-};
+
 const refreshTokenStore = {};
 const accessTokenCache = new NodeCache({ deleteOnExpire: true });
 
 const CleanIncomingData = async (incomingdata) => {
-  console.log(incomingdata);
+  return null;
 };
 //gets all SKU values from product page on hubspot
 const getAllProductSKU = async (accessToken) => {
@@ -45,7 +38,7 @@ const getAllProductSKU = async (accessToken) => {
 //takes the productpage of SKU's and compares to SKU's passed to us from pricesheet
 //returns all object id's of the products via the SKU comparison
 //object ID's are used to create line items with the correct item
-const MatchSKUs_GetProductid = (res, SKU, ProductPageSKUs) => {
+const MatchSKUs_GetProductid = (res, SKU, ProductPageSKUs, SKU_data_dicti) => {
   if (ProductPageSKUs.status === "error") {
     res.write(
       `<p>Unable to retrieve contact! Error Message: ${ProductPageSKUs.message}</p>`

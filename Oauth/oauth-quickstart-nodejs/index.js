@@ -185,31 +185,10 @@ app.get("/oauthtrigg", async (req, res) => {
   //accepts SKU values via url
 
   if (SKUarr.length === 0) {
-    const SKUaccept = await req.query.sku;
-    SKUarr = SKUaccept.split(",");
-    const PRODaccept = await req.query.product;
-    datadict["product"] = PRODaccept.split(",");
-    const SDateaccept = await req.query.startdate;
-    datadict["startdate"] = SDateaccept.split(",");
-    const EDateaccept = await req.query.enddate;
-    datadict["enddate"] = EDateaccept.split(",");
-    const Quantityaccept = await req.query.quantity;
-    datadict["quantity"] = Quantityaccept.split(",");
-    const Ourpriceaccept = await req.query.ourprice;
-    datadict["ourprice"] = Ourpriceaccept.split(",");
-    //organize the data into {sku: {product: aasdasd, start: asdasd}}
-
-    for (let i = 0; i < SKUarr.length; i++) {
-      const sku = SKUarr[i];
-      finalOutput[sku] = {
-        product: datadict.product[i],
-        startdate: datadict.startdate[i],
-        enddate: datadict.enddate[i],
-        quantity: datadict.quantity[i],
-        ourprice: datadict.ourprice[i],
-      };
-    }
-    console.log(finalOutput);
+    const encodedDictionary = await req.query.data;
+    const decodedDictionary = decodeURIComponent(encodedDictionary);
+    const dictionary = JSON.parse(decodedDictionary);
+    console.log(dictionary);
   }
 
   res.write(`<h2>HubSpot OAuth 2.0 Quickstart App</h2>`);
@@ -226,9 +205,10 @@ app.get("/oauthtrigg", async (req, res) => {
     const ItemArray_OfProductIds = MatchSKUs_GetProductid(
       res,
       SKUarr,
-      ProductPageSKUs
+      ProductPageSKUs,
+      finalOutput
     );
-    console.log(finalOutput);
+
     //adds lineitems and associates them with the correct deal
     AddItems(accessToken, ItemArray_OfProductIds);
   } else {
