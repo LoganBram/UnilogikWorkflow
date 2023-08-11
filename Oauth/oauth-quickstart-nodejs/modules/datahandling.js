@@ -38,7 +38,7 @@ const getAllProductSKU = async (accessToken) => {
 //takes the productpage of SKU's and compares to SKU's passed to us from pricesheet
 //returns all object id's of the products via the SKU comparison
 //object ID's are used to create line items with the correct item
-const MatchSKUs_GetProductid = (res, SKU, ProductPageSKUs) => {
+const MatchSKUs_GetProductid = (res, pricesheetdata, ProductPageSKUs) => {
   if (ProductPageSKUs.status === "error") {
     res.write(
       `<p>Unable to retrieve contact! Error Message: ${ProductPageSKUs.message}</p>`
@@ -51,11 +51,17 @@ const MatchSKUs_GetProductid = (res, SKU, ProductPageSKUs) => {
   //then adds product ID of matching SKU's
   for (let i = 0; i < SKU.length; i++) {
     for (let j = 0; j < ProductPageSKUs.objects.length; j++) {
-      if (SKU[i] == ProductPageSKUs.objects[j].properties.hs_sku.value) {
+      const key = "line" + (i + 1);
+      console.log(key);
+      console.log(pricesheetdata, "hhhhhhhh");
+      if (
+        pricesheetdata[key].sku ==
+        ProductPageSKUs.objects[j].properties.hs_sku.value
+      ) {
         matches.push(ProductPageSKUs.objects[j].objectId);
         console.log(
           "SKU VALUE:",
-          SKU[i],
+          pricesheetdata[key].sku,
           "matches with:",
           ProductPageSKUs.objects[j].properties.hs_sku.value,
           "adding product id:",

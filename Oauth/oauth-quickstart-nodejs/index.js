@@ -8,14 +8,8 @@ const app = express();
 const SKU = require("./sku.js");
 const PORT = 3000;
 const matches = [];
-let SKUarr = [];
-let datadict = {
-  product: "hpro",
-  startdate: "st",
-  enddate: "en",
-  quantity: "q",
-  ourprice: "ourpr",
-};
+let SKUarr = [1];
+let pricesheetdata = [];
 let finalOutput = {};
 
 const refreshTokenStore = {};
@@ -183,17 +177,15 @@ const isAuthorized = (userId) => {
 app.get("/oauthtrigg", async (req, res) => {
   res.setHeader("Content-Type", "text/html");
   //accepts SKU values via url
-
-  if (SKUarr.length === 0) {
+  if (pricesheetdata.length === 0) {
     const encodedDictionary = await req.query.data;
     const decodedDictionary = decodeURIComponent(encodedDictionary);
-    const dictionary = JSON.parse(decodedDictionary);
-    console.log(dictionary);
+    pricesheetdata.push(JSON.parse(decodedDictionary));
   }
 
   res.write(`<h2>HubSpot OAuth 2.0 Quickstart App</h2>`);
   if (isAuthorized(req.sessionID)) {
-    console.log(SKUarr);
+    console.log(pricesheetdata, "SKU");
     const accessToken = await getAccessToken(req.sessionID);
     //gets all SKU's from product page in hubspot to be later matched againt
     //SKU's passed from frontend
@@ -207,7 +199,7 @@ app.get("/oauthtrigg", async (req, res) => {
       SKUarr,
       ProductPageSKUs
     );
-
+    console.log(finalOutput);
     //adds lineitems and associates them with the correct deal
     AddItems(accessToken, ItemArray_OfProductIds);
   } else {
