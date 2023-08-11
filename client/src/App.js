@@ -188,17 +188,28 @@ function FileProcessor() {
     //if it will work
 
     setTimeout(() => {
-      const skuarray = finaldata.map((subarray) => subarray[1]);
-      const productarray = finaldata.map((subarray) => subarray[2]);
-      const startdate = finaldata.map((subarray) => subarray[6]);
-      const enddate = finaldata.map((subarray) => subarray[7]);
-      const quantity = finaldata.map((subarray) => subarray[8]);
-      const ourprice = finaldata.map((subarray) => subarray[9]);
+      //creates datarray object
+      const dataArray = finaldata.map((subarray) => ({
+        sku: subarray[1],
+        product: subarray[2],
+        startdate: subarray[6],
+        enddate: subarray[7],
+        quantity: subarray[8],
+        ourprice: subarray[9],
+      }));
 
-      //distributer price already accounted for in
-      const grs = skuarray.join(",");
-      // Run the redirect function to begin OAuth functionality
-      window.location.href = `http://localhost:3000/oauthtrigg/?array=${grs}`;
+      // Join specific properties
+      const sku = dataArray.map((item) => item.sku).join(",");
+      const product = dataArray.map((item) => item.product).join(",");
+      const startdate = dataArray.map((item) => item.startdate).join(",");
+      const enddate = dataArray.map((item) => item.enddate).join(",");
+      const quantity = dataArray.map((item) => item.quantity).join(",");
+      const ourprice = dataArray.map((item) => item.ourprice).join(",");
+      // prep url for get request
+      const queryParams = `sku=${sku}&product=${product}&startdate=${startdate}&enddate=${enddate}&quantity=${quantity}&ourprice=${ourprice}`;
+      const redirectUrl = `http://localhost:3000/oauthtrigg/?${queryParams}`;
+      //redirect using data in url
+      window.location.href = redirectUrl;
     }, 8000);
   };
 
