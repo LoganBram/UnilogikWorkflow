@@ -196,10 +196,10 @@ app.get("/oauthtrigg", async (req, res) => {
     //returns all the object ID's of the SKU's that match so we can make a deal from them
     const ItemArray_OfProductIds = MatchSKUs_GetProductid(
       res,
-      SKUarr,
+      pricesheetdata,
       ProductPageSKUs
     );
-    console.log(finalOutput);
+
     //adds lineitems and associates them with the correct deal
     AddItems(accessToken, ItemArray_OfProductIds);
   } else {

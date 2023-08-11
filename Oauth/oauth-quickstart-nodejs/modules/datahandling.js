@@ -45,23 +45,22 @@ const MatchSKUs_GetProductid = (res, pricesheetdata, ProductPageSKUs) => {
     );
     return;
   }
-  console.log("hello", ProductPageSKUs);
 
   //compares product page SKU values to our array of the SKU values we want,
   //then adds product ID of matching SKU's
-  for (let i = 0; i < SKU.length; i++) {
+  for (let i = 0; i < Object.keys(pricesheetdata[0]).length; i++) {
     for (let j = 0; j < ProductPageSKUs.objects.length; j++) {
       const key = "line" + (i + 1);
-      console.log(key);
-      console.log(pricesheetdata, "hhhhhhhh");
+      console.log(key, "KEY");
+      console.log(pricesheetdata[0][key], "pscd");
       if (
-        pricesheetdata[key].sku ==
+        parseInt(pricesheetdata[0][key].sku) ==
         ProductPageSKUs.objects[j].properties.hs_sku.value
       ) {
         matches.push(ProductPageSKUs.objects[j].objectId);
         console.log(
           "SKU VALUE:",
-          pricesheetdata[key].sku,
+          pricesheetdata[0][key].sku,
           "matches with:",
           ProductPageSKUs.objects[j].properties.hs_sku.value,
           "adding product id:",
@@ -71,14 +70,14 @@ const MatchSKUs_GetProductid = (res, pricesheetdata, ProductPageSKUs) => {
       } else {
         console.log(
           "NOT MATCHED",
-          SKU[i],
+          pricesheetdata[0][key].sku,
           ProductPageSKUs.objects[j].properties.hs_sku.value
         );
       }
     }
   }
 
-  res.write(`<p>Contact name: ${SKU}  </p>`);
+  res.write(`<p>Contact name: ${matches}  </p>`);
   res.write(`<p>Contact name: ${ProductPageSKUs}  </p>`);
   return matches;
 };
