@@ -212,7 +212,7 @@ function FileProcessor() {
       const redirectUrl = `http://localhost:3000/oauthtrigg/?data=${encodedDictionary}`;
       //redirect using data in url
       window.location.href = redirectUrl;
-    }, 10000);
+    }, 5000);
   };
 
   return (
