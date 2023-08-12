@@ -57,6 +57,8 @@ const MatchSKUs_GetProductid = (res, pricesheetdata, ProductPageSKUs) => {
         parseInt(pricesheetdata[0][key].sku) ==
         ProductPageSKUs.objects[j].properties.hs_sku.value
       ) {
+        pricesheetdata[0][key]["objectid"] =
+          ProductPageSKUs.objects[j].objectId;
         matches.push(ProductPageSKUs.objects[j].objectId);
         console.log(
           "SKU VALUE:",
@@ -77,9 +79,10 @@ const MatchSKUs_GetProductid = (res, pricesheetdata, ProductPageSKUs) => {
     }
   }
 
-  res.write(`<p>Contact name: ${matches}  </p>`);
+  res.write(`<p>Contact name: ${pricesheetdata}  </p>`);
   res.write(`<p>Contact name: ${ProductPageSKUs}  </p>`);
-  return matches;
+  //RETURN IT HERE
+  console.log(pricesheetdata);
 };
 
 //takes in array of object id's that have been filtered for only the ones to add
