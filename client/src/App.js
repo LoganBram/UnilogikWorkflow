@@ -122,11 +122,13 @@ function FileProcessor() {
         innerArray.splice(9, 4);
         innerArray.splice(11, 2);
       });
-
+      console.log("here");
+      console.log(finaldata);
       //adding data to the excel sheet
       let j = 23;
       //j keeps track of row to input at (always 23 due to the quote layout)
       //i iterates through data array
+
       for (let i = 0; i < finaldata.length; i++) {
         newWorksheet.insertRow(j, finaldata[i], "i+");
         newWorksheet.mergeCells("C" + j, ":D" + j);
@@ -156,11 +158,17 @@ function FileProcessor() {
       newWorksheet.getCell("A51").value = chosen.employee_phone;
       newWorksheet.getCell("A52").value = chosen.email;
 
-      //get todays date
+      // Get today's date
       const date = new Date();
-      //changes date to local time based on user
-      //adds current date to the quote
-      newWorksheet.getCell("I2").value = date.toLocaleDateString("en-US");
+
+      // Define options for formatting the date
+      const options = { year: "numeric", month: "long", day: "numeric" };
+
+      // Format the date as "August 18, 2023"
+      const formattedDate = date.toLocaleDateString("en-US", options);
+
+      // Adds the formatted date to the desired cell
+      newWorksheet.getCell("I2").value = formattedDate;
 
       console.log("New workbook created successfully!");
 
@@ -176,8 +184,6 @@ function FileProcessor() {
       downloadLink.download = "processed_file.xlsx";
       downloadLink.click();
       downloadLink.remove();
-      console.log(finaldata);
-      console.log(distcost);
     };
 
     reader.readAsArrayBuffer(file);
@@ -212,7 +218,7 @@ function FileProcessor() {
       const redirectUrl = `http://localhost:3000/oauthtrigg/?data=${encodedDictionary}`;
       //redirect using data in url
       window.location.href = redirectUrl;
-    }, 5000);
+    }, 50000);
   };
 
   return (

@@ -80,8 +80,6 @@ const MatchSKUs_GetProductid = (res, pricesheetdata, ProductPageSKUs) => {
     }
   }
 
-  res.write(`<p>Contact name: ${pricesheetdata}  </p>`);
-  res.write(`<p>Contact name: ${ProductPageSKUs}  </p>`);
   //RETURN IT HERE
   return pricesheetdata;
 };
@@ -133,7 +131,7 @@ const AddItems = async (accessToken, ProductData_WithObjectid) => {
   const CreateDeal = async () => {
     const requestData = {
       properties: {
-        dealname: "Deal Name Placeholder",
+        dealname: "New Deal Demo",
       },
     };
 
@@ -183,6 +181,7 @@ const AddItems = async (accessToken, ProductData_WithObjectid) => {
       unmatchedlines.push(ProductData_WithObjectid[0][product]);
     }
   }
+  return unmatchedlines;
 };
 
 module.exports = {

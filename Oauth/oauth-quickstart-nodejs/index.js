@@ -188,10 +188,10 @@ app.get("/oauthtrigg", async (req, res) => {
     console.log(pricesheetdata, "SKU");
 
     const accessToken = await getAccessToken(req.sessionID);
+
     //gets all SKU's from product page in hubspot to be later matched againt
     //SKU's passed from frontend
     const ProductPageSKUs = await getAllProductSKU(accessToken);
-    res.write(`<h4>Access token: ${accessToken}</h4>`);
 
     //Takes in all productpage data, compares all the SKU's in the product page to
     //returns all the object ID's of the SKU's that match so we can make a deal from them
@@ -201,12 +201,16 @@ app.get("/oauthtrigg", async (req, res) => {
       ProductPageSKUs
     );
 
-    /* ITS GOING TO THROW ERRORS FROM HERE BECAUSE NOW MATCHSKUS_GETPRODUCTID
-      HAS BEEN CHANGED SO IT ADDS OBJECT ID TO THE DICTIONARY, RETURNS NOTHING RIGHT NOW IT JUST LOGS IT GO FIX THAT
-      NEXT STEP IS TO EDIT ADDITEMS FOR THE DICTIONARY RETURN*/
-    //--------------------------------------------------------------------------------------------------------------------------------
+    //Adds items to hubspot and returns products from excel sheet that didnt match hubspot products
+    const ItemsNotFoundInHS = await AddItems(
+      accessToken,
+      ProductData_WithObjectid
+    );
 
-    AddItems(accessToken, ProductData_WithObjectid);
+    console.log("unmatchedlines", ItemsNotFoundInHS);
+    res.write(
+      `<p>: Products not found in hubspot: ${ItemsNotFoundInHS[0].product} / SKU: ${ItemsNotFoundInHS[0].sku} </p>`
+    );
   } else {
     res.write(`<a href="/install"><h3>Install the app</h3></a>`);
   }
