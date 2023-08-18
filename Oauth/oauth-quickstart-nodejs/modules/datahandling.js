@@ -100,6 +100,18 @@ const AddItems = async (accessToken, ProductData_WithObjectid) => {
         name: "hs_product_id",
         value: Product.objectid,
       },
+      {
+        name: "quantity",
+        value: Product.quantity,
+      },
+      {
+        name: "closedate",
+        value: Product.enddate,
+      },
+      {
+        name: "opendate",
+        value: Product.startdate,
+      },
     ];
     //sends post request to generate the line item with product details
     // holds the object id that is returned for the put assocation
@@ -154,19 +166,20 @@ const AddItems = async (accessToken, ProductData_WithObjectid) => {
   };
 
   const DealId = await CreateDeal();
-  console.log(ProductData_WithObjectid[0], "HELLO");
-  for (const product in ProductData_WithObjectid[0]) {
-    //passes product id, creates line item and returns lineitem ID
-    console.log(ProductData_WithObjectid[0][product], "HI");
+  const unmatchedlines = [];
 
+  for (const product in ProductData_WithObjectid[0]) {
+    //check if SKU was matched with hubspot product id
     if (ProductData_WithObjectid[0][product].hasOwnProperty("objectid")) {
       console.log(ProductData_WithObjectid[0][product], "has it");
-      const LineItemId = await CreateLineItem(product);
-      console.log(LineItemId);
-      console.log(DealId);
-      console.log(DealId, LineItemId, "here");
+      //creates line item with product/objectid
+      const LineItemId = await CreateLineItem(
+        ProductData_WithObjectid[0][product]
+      );
       //associates line item with deal
       AssociateWithDeal(DealId, LineItemId);
+    } else {
+      unmatchedlines.push(ProductData_WithObjectid[0][product]);
     }
   }
 };
