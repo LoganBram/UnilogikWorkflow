@@ -82,29 +82,23 @@ const MatchSKUs_GetProductid = (res, pricesheetdata, ProductPageSKUs) => {
   res.write(`<p>Contact name: ${pricesheetdata}  </p>`);
   res.write(`<p>Contact name: ${ProductPageSKUs}  </p>`);
   //RETURN IT HERE
-  console.log(pricesheetdata);
+  return pricesheetdata;
 };
 
 //takes in array of object id's that have been filtered for only the ones to add
-const AddItems = async (accessToken, ItemArray_OfProductIds) => {
+const AddItems = async (accessToken, ProductData_WithObjectid) => {
+  //create token header
   const headers = {
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
   };
-  //Creates line item using productid
-  console.log(ItemArray_OfProductIds, "here");
-  //create a new deal
 
   //add each item from the pricesheet to the deal
-  const CreateLineItem = async (ProductId) => {
+  const CreateLineItem = async (Product) => {
     const requestData = [
       {
         name: "hs_product_id",
-        value: ProductId,
-      },
-      {
-        name: "quantity",
-        value: "50",
+        value: Product.objectid,
       },
     ];
     //sends post request to generate the line item with product details
@@ -126,8 +120,7 @@ const AddItems = async (accessToken, ItemArray_OfProductIds) => {
   const CreateDeal = async () => {
     const requestData = {
       properties: {
-        amount: "1500.00",
-        dealname: "good1",
+        dealname: "Deal Name Placeholder",
       },
     };
 
@@ -161,12 +154,20 @@ const AddItems = async (accessToken, ItemArray_OfProductIds) => {
   };
 
   const DealId = await CreateDeal();
-  for (let i = 0; i < ItemArray_OfProductIds.length; i++) {
+  console.log(ProductData_WithObjectid[0], "HELLO");
+  for (const product in ProductData_WithObjectid[0]) {
     //passes product id, creates line item and returns lineitem ID
-    const LineItemId = await CreateLineItem(ItemArray_OfProductIds[i]);
-    console.log(DealId, LineItemId, "here");
-    //associates line item with deal
-    AssociateWithDeal(DealId, LineItemId);
+    console.log(ProductData_WithObjectid[0][product], "HI");
+
+    if (ProductData_WithObjectid[0][product].hasOwnProperty("objectid")) {
+      console.log(ProductData_WithObjectid[0][product], "has it");
+      const LineItemId = await CreateLineItem(product);
+      console.log(LineItemId);
+      console.log(DealId);
+      console.log(DealId, LineItemId, "here");
+      //associates line item with deal
+      AssociateWithDeal(DealId, LineItemId);
+    }
   }
 };
 

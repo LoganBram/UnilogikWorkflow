@@ -194,14 +194,17 @@ app.get("/oauthtrigg", async (req, res) => {
 
     //Takes in all productpage data, compares all the SKU's in the product page to
     //returns all the object ID's of the SKU's that match so we can make a deal from them
-    const ItemArray_OfProductIds = MatchSKUs_GetProductid(
+    const ProductData_WithObjectid = MatchSKUs_GetProductid(
       res,
       pricesheetdata,
       ProductPageSKUs
     );
+    /* ITS GOING TO THROW ERRORS FROM HERE BECAUSE NOW MATCHSKUS_GETPRODUCTID
+      HAS BEEN CHANGED SO IT ADDS OBJECT ID TO THE DICTIONARY, RETURNS NOTHING RIGHT NOW IT JUST LOGS IT GO FIX THAT
+      NEXT STEP IS TO EDIT ADDITEMS FOR THE DICTIONARY RETURN*/
+    //--------------------------------------------------------------------------------------------------------------------------------
 
-    //adds lineitems and associates them with the correct deal
-    AddItems(accessToken, ItemArray_OfProductIds);
+    AddItems(accessToken, ProductData_WithObjectid);
   } else {
     res.write(`<a href="/install"><h3>Install the app</h3></a>`);
   }
