@@ -186,6 +186,7 @@ app.get("/oauthtrigg", async (req, res) => {
   res.write(`<h2>HubSpot OAuth 2.0 Quickstart App</h2>`);
   if (isAuthorized(req.sessionID)) {
     console.log(pricesheetdata, "SKU");
+
     const accessToken = await getAccessToken(req.sessionID);
     //gets all SKU's from product page in hubspot to be later matched againt
     //SKU's passed from frontend
@@ -199,6 +200,7 @@ app.get("/oauthtrigg", async (req, res) => {
       pricesheetdata,
       ProductPageSKUs
     );
+
     /* ITS GOING TO THROW ERRORS FROM HERE BECAUSE NOW MATCHSKUS_GETPRODUCTID
       HAS BEEN CHANGED SO IT ADDS OBJECT ID TO THE DICTIONARY, RETURNS NOTHING RIGHT NOW IT JUST LOGS IT GO FIX THAT
       NEXT STEP IS TO EDIT ADDITEMS FOR THE DICTIONARY RETURN*/

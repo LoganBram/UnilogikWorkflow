@@ -52,10 +52,11 @@ const MatchSKUs_GetProductid = (res, pricesheetdata, ProductPageSKUs) => {
     for (let j = 0; j < ProductPageSKUs.objects.length; j++) {
       const key = "line" + (i + 1);
       console.log(key, "KEY");
-      console.log(pricesheetdata[0][key], "pscd");
       if (
         parseInt(pricesheetdata[0][key].sku) ==
-        ProductPageSKUs.objects[j].properties.hs_sku.value
+          ProductPageSKUs.objects[j].properties.hs_sku.value ||
+        pricesheetdata[0][key].sku ===
+          ProductPageSKUs.objects[j].properties.hs_sku.value
       ) {
         pricesheetdata[0][key]["objectid"] =
           ProductPageSKUs.objects[j].objectId;
