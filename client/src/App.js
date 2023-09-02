@@ -11,16 +11,16 @@ function FileProcessor() {
   const options = [
     {
       user: {
-        name: "ryan",
-        employee_phone: "1112223333",
+        name: "Ryan Hills, Unilogik Systems",
+        employee_phone: "778-589-4023",
         email: "ryan@unilogik.com",
       },
     },
     {
       user: {
-        name: "logan",
+        name: "Logan Bramwell, Unilogik Systems",
         employee_phone: "12365789",
-        email: "logan@uiolgik.com",
+        email: "logan@uniolgik.com",
       },
     },
   ];
@@ -128,7 +128,7 @@ function FileProcessor() {
       let j = 23;
       //j keeps track of row to input at (always 23 due to the quote layout)
       //i iterates through data array
-
+      console.log(finaldata);
       for (let i = 0; i < finaldata.length; i++) {
         newWorksheet.insertRow(j, finaldata[i], "i+");
         newWorksheet.mergeCells("C" + j, ":D" + j);
@@ -136,6 +136,15 @@ function FileProcessor() {
       }
 
       //now adding the extra information inputted by user
+      //adding employee name which is below the added lines of products, so it will be that many lower then original position
+      let nameposition = 41 + finaldata.length;
+      let namecell = "A" + nameposition;
+      let phoneposition = "A" + (nameposition + 1);
+      let emailposition = "A" + (nameposition + 2);
+      console.log(namecell);
+      console.log(phoneposition);
+      console.log(emailposition);
+
       newWorksheet.getCell("A13").value = InvoiceTo.company;
       newWorksheet.getCell("A14").value = InvoiceTo.address;
       newWorksheet.getCell("A15").value = InvoiceTo.postal;
@@ -154,9 +163,10 @@ function FileProcessor() {
       newWorksheet.getCell("I7").value = InvoiceTo.psttaxable;
       newWorksheet.getCell("I8").value = InvoiceTo.pstexempt;
       newWorksheet.getCell("K35").value = InvoiceTo.terms;
-      newWorksheet.getCell("A50").value = chosen.name;
-      newWorksheet.getCell("A51").value = chosen.employee_phone;
-      newWorksheet.getCell("A52").value = chosen.email;
+
+      newWorksheet.getCell(namecell).value = chosen.name;
+      newWorksheet.getCell(phoneposition).value = chosen.employee_phone;
+      newWorksheet.getCell(emailposition).value = chosen.email;
 
       // Get today's date
       const date = new Date();
@@ -218,7 +228,7 @@ function FileProcessor() {
       const redirectUrl = `http://localhost:3000/oauthtrigg/?data=${encodedDictionary}`;
       //redirect using data in url
       window.location.href = redirectUrl;
-    }, 50000);
+    }, 3000000);
   };
 
   return (
