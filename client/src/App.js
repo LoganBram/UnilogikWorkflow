@@ -122,29 +122,31 @@ function FileProcessor() {
         innerArray.splice(9, 4);
         innerArray.splice(11, 2);
       });
-      console.log("here");
+
       console.log(finaldata);
       //adding data to the excel sheet
       let j = 23;
       //j keeps track of row to input at (always 23 due to the quote layout)
       //i iterates through data array
-      console.log(finaldata);
+
       for (let i = 0; i < finaldata.length; i++) {
         newWorksheet.insertRow(j, finaldata[i], "i+");
         newWorksheet.mergeCells("C" + j, ":D" + j);
         j++;
       }
 
-      //now adding the extra information inputted by user
-      //adding employee name which is below the added lines of products, so it will be that many lower then original position
+      //Getting correct cell for employee name, phone, and email since it changes with the amount of rows added
       let nameposition = 41 + finaldata.length;
       let namecell = "A" + nameposition;
       let phoneposition = "A" + (nameposition + 1);
       let emailposition = "A" + (nameposition + 2);
-      console.log(namecell);
-      console.log(phoneposition);
-      console.log(emailposition);
+      //bug where customer signature gets repeated 3 times on copy over, cover it with a blank until issue is found
+      //#1) isnt related to the amount of rows being added
+      //gets position of customer signature glitch
+      let custsign_glitchposition1 = "B" + (nameposition - 6);
+      let custsign_glitchposition2 = "C" + (nameposition - 6);
 
+      //now adding the extra information inputted by user
       newWorksheet.getCell("A13").value = InvoiceTo.company;
       newWorksheet.getCell("A14").value = InvoiceTo.address;
       newWorksheet.getCell("A15").value = InvoiceTo.postal;
@@ -167,6 +169,9 @@ function FileProcessor() {
       newWorksheet.getCell(namecell).value = chosen.name;
       newWorksheet.getCell(phoneposition).value = chosen.employee_phone;
       newWorksheet.getCell(emailposition).value = chosen.email;
+
+      newWorksheet.getCell(custsign_glitchposition1).value = null;
+      newWorksheet.getCell(custsign_glitchposition2).value = null;
 
       // Get today's date
       const date = new Date();
