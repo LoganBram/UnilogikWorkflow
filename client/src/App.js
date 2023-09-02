@@ -11,16 +11,23 @@ function FileProcessor() {
   const options = [
     {
       user: {
+        name: "Pick Employee",
+        employee_phone: "1111111111",
+        email: "pickemployee@unilogik.com",
+      },
+    },
+    {
+      user: {
         name: "Ryan Hills, Unilogik Systems",
         employee_phone: "778-589-4023",
-        email: "ryan@unilogik.com",
+        email: "rhills@unilogik.com",
       },
     },
     {
       user: {
         name: "Logan Bramwell, Unilogik Systems",
         employee_phone: "12365789",
-        email: "logan@uniolgik.com",
+        email: "logan@unigik.com",
       },
     },
   ];
@@ -233,7 +240,7 @@ function FileProcessor() {
       const redirectUrl = `http://localhost:3000/oauthtrigg/?data=${encodedDictionary}`;
       //redirect using data in url
       window.location.href = redirectUrl;
-    }, 3000000);
+    }, 5000);
   };
 
   return (
@@ -372,10 +379,13 @@ function EmployeeDropdown({ handleDropdown, chosen }) {
   //value tells what index of the options array to use
   return (
     <select onChange={handleDropdown} defaultValue={chosen}>
-      <option name="ryan" value="0">
+      <option name="pickemployee" value="0">
+        Pick Employee
+      </option>
+      <option name="ryan" value="1">
         ryan
       </option>
-      <option name="logan" value="1">
+      <option name="logan" value="2">
         logan
       </option>
     </select>
